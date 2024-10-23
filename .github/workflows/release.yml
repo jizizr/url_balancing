@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            extension: ".tar.gz"
+            system_name: "linux"
+          - os: macos-latest
+            extension: ".tar.gz"
+            system_name: "macos"
+          - os: windows-latest
+            extension: ".zip"
+            system_name: "windows"
+
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v4
+
+      # Set up Rust environment
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      # Build Rust backend
+      - name: Build Rust backend
+        run: cargo build --release
+
+      # Build frontend (npm)
+      - name: Build frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+          mv build ../
+
+      # Package both Rust backend and frontend build results
+      - name: Package build and backend
+        if: ${{matrix.os != 'windows-latest' }}
+        run: |
+          mkdir output
+          tar -czvf ./output/url_balancing_${{ matrix.system_name }}${{ matrix.extension }} -C target/release url_balancing -C ../../ build
+      - name: Package build and backend
+        if: ${{matrix.os == 'windows-latest' }}
+        run: |
+          mkdir output
+          powershell Compress-Archive -Path target/release/url_balancing.exe, build -DestinationPath ./output/url_balancing_${{ matrix.system_name }}${{ matrix.extension }}
+      - name: Archive atrifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: url-balancing-${{ matrix.os }}
+          path: |
+            ./output/*.zip
+            ./output/*.tar.gz
+  Upload-Release:
+      permissions: write-all
+      needs: [build]
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/download-artifact@v4
+          with:
+            path: output/
+            merge-multiple: true
+        - name: Upload Release
+          uses: ncipollo/release-action@v1
+          with:
+            artifacts: "output/*"
+            token: ${{ secrets.GITHUB_TOKEN }}
+        - name: Upload Release
+          uses: softprops/action-gh-release@v2
+          with:
+            files: output/*
