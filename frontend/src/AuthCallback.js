@@ -34,7 +34,7 @@ const AuthCallback = ({ setIsAuthenticated, setUser }) => {
         };
 
         authorizeUser();
-    }, [navigate, setIsAuthenticated, setUser]);
+    }, [searchParams, navigate, setIsAuthenticated, setUser]);
 
     return <div>Authorizing...</div>;
 };
