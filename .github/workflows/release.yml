@@ -35,7 +35,10 @@ jobs:
       # Build Rust backend
       - name: Build Rust backend
         run: cargo build --release
-
+      # Set up Node.js environment
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 202
       # Build frontend (npm)
       - name: Build frontend
         run: |
@@ -72,11 +75,6 @@ jobs:
           with:
             path: output/
             merge-multiple: true
-        - name: Upload Release
-          uses: ncipollo/release-action@v1
-          with:
-            artifacts: "output/*"
-            token: ${{ secrets.GITHUB_TOKEN }}
         - name: Upload Release
           uses: softprops/action-gh-release@v2
           with:
