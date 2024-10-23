@@ -38,7 +38,7 @@ jobs:
       # Set up Node.js environment
       - uses: actions/setup-node@v4
         with:
-          node-version: 202
+          node-version: 22
       # Build frontend (npm)
       - name: Build frontend
         run: |
