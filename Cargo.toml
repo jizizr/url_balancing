@@ -28,3 +28,5 @@ jsonwebtoken = "9"
 cookie = "0.18"
 [dev-dependencies]
 axum-macros = "0.4.2"
+[profile.release]
+lto = true
