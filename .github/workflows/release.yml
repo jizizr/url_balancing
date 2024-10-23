@@ -29,7 +29,9 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.os }}
       # Build Rust backend
       - name: Build Rust backend
         run: cargo build --release
