@@ -1,9 +1,12 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Tag version to release"
+        required: true
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -79,3 +82,4 @@ jobs:
           uses: softprops/action-gh-release@v2
           with:
             files: output/*
+            tag_name: ${{ github.event.inputs.version }}
