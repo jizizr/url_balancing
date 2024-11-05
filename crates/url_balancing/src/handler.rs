@@ -15,9 +15,7 @@ pub async fn url_balancing(
 ) -> Result<Redirect, AppError> {
     let backend_url = state.get_url(&key).await?;
     match backend_url {
-        Some(url) => {
-            Ok(Redirect::temporary(&url))
-        }
+        Some(url) => Ok(Redirect::temporary(&url)),
         None => Err(AppError::HTTPNotFound),
     }
 }

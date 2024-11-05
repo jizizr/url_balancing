@@ -28,6 +28,10 @@ pub enum AppError {
     UrlParse(#[from] url::ParseError),
     #[error("Redis错误: {0}")]
     Redis(#[from] redis::RedisError),
+    #[error("MySQL错误: {0}")]
+    MySQL(#[from] sea_orm::DbErr),
+    #[error("Key not found")]
+    KeyNotFound,
     #[error("state过期或不存在")]
     StateNotFound,
     #[error("token异常: {0}")]

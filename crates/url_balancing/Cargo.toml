@@ -1,0 +1,36 @@
+[package]
+name = "url_balancing"
+version = "0.1.0"
+edition = "2021"
+
+default-run = "url_balancing"
+
+[[bin]]
+name = "url_balancing"
+path = "src/main.rs"
+
+[dependencies]
+entity = { workspace = true }
+migration = { workspace = true }
+
+axum = "0.7"
+tower = "0.5"
+rand = "0.8"
+redis = { version = "0.27", features = ["tokio-comp"] }
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+ring = "0.17"
+base64 = "0.22"
+url = "2.5"
+oauth2 = "4"
+reqwest = { version = "0.12", default-features = false, features = [
+    "rustls-tls",
+    "json",
+] }
+thiserror = "1.0"
+strum_macros = "0.26"
+jsonwebtoken = "9"
+cookie = "0.18"
+sea-orm = "1.0"
+[dev-dependencies]
+axum-macros = "0.4.2"
